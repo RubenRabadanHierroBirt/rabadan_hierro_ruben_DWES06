@@ -1,0 +1,40 @@
+package com.example.microserviciodummy.controller;
+
+import com.example.microserviciodummy.model.Stock;
+import com.example.microserviciodummy.service.StockService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/stock")
+public class StockController {
+
+    private final StockService stockService;
+
+    public StockController(StockService stockService) {
+        this.stockService = stockService;
+    }
+
+    @GetMapping("/{articuloId}")
+    public ResponseEntity<Stock> getStock(@PathVariable("articuloId") int articuloId) {
+        return ResponseEntity.ok(stockService.getStock(articuloId));
+    }
+
+    @PostMapping
+    public ResponseEntity<Stock> crearStock(@RequestBody Stock nuevoStock) {
+        Stock creado = stockService.crearStock(nuevoStock);
+        return ResponseEntity.ok(creado);
+    }
+
+    @PutMapping("/{articuloId}")
+    public ResponseEntity<Stock> actualizarStock(@PathVariable("articuloId") int articuloId,
+                                                 @RequestBody Map<String, Integer> payload){
+
+        
+        int nuevaCantidad = payload.get("cantidad");
+        Stock actualizado = stockService.actualizarStock(articuloId, nuevaCantidad);
+        return ResponseEntity.ok(actualizado);
+    }
+}

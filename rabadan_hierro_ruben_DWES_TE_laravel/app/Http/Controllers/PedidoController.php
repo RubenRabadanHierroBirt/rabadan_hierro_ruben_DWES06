@@ -14,7 +14,16 @@ class PedidoController extends Controller
 
     public function store(Request $request)
     {
-        return Pedido::create($request->all());
+        $validated = $request->validate([
+            'cliente' => 'required|exists:clientes,id',
+            'vendedor' => 'required|exists:vendedores,id',
+            'fecha' => 'required|date',
+            'estado' => 'required|in:pendiente,enviado,cancelado',
+            'total' => 'required|numeric|min:0',
+        ]);
+
+        $pedido = Pedido::create($validated);
+        return response()->json($pedido, 201);
     }
 
     public function show($id)
@@ -25,12 +34,46 @@ class PedidoController extends Controller
     public function update(Request $request, $id)
     {
         $pedido = Pedido::findOrFail($id);
-        $pedido->update($request->all());
-        return $pedido;
+
+        $validated = $request->validate([
+            'cliente' => 'sometimes|exists:clientes,id',
+            'vendedor' => 'sometimes|exists:vendedores,id',
+            'fecha' => 'sometimes|date',
+            'estado' => 'sometimes|in:pendiente,enviado,cancelado',
+            'total' => 'sometimes|numeric|min:0',
+        ]);
+
+        $pedido->update($validated);
+        return response()->json($pedido);
     }
 
     public function destroy($id)
     {
-        return Pedido::destroy($id);
+        Pedidos::destroy($id);
+        return response()->json(['mensaje' => 'Pedido eliminado correctamente']);
     }
+
+    public function porCliente($cliente_id)
+    {
+        $pedidos = Pedido::where('cliente', $cliente_id)->get();
+
+        if ($pedidos->isEmpty()) {
+            return response()->json(['mensaje' => 'No hay pedidos para este cliente'], 404);
+        }
+
+        return response()->json($pedidos);
+    }
+
+    public function porVendedor($vendedor_id)
+    {
+        $pedidos = Pedido::where('vendedor', $vendedor_id)->get();
+
+        if ($pedidos->isEmpty()) {
+            return response()->json(['mensaje' => 'No hay pedidos para este vendedor'], 404);
+        }
+
+        return response()->json($pedidos);
+    }
+
+
 }
