@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-05-2025 a las 20:14:32
+-- Tiempo de generación: 28-05-2025 a las 21:43:01
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `rabadan_hierro_ruben_dwes06_te`
+-- Base de datos: `rabadan_hierro_ruben_dwes06`
 --
 
 -- --------------------------------------------------------
@@ -39,10 +39,10 @@ CREATE TABLE `articulo` (
 -- Volcado de datos para la tabla `articulo`
 --
 
-INSERT INTO articulo (ID, NOMBRE, DESCRIPCION, PRECIO, STOCK) VALUES
+INSERT INTO `articulo` (`ID`, `NOMBRE`, `DESCRIPCION`, `PRECIO`, `STOCK`) VALUES
 (1, 'Ratón Inalámbrico', 'Ratón óptico ergonómico', 15.99, 100),
 (2, 'Teclado Mecánico', 'Teclado con retroiluminación RGB', 49.99, 50),
-(3, 'Pantalla 24"', 'Monitor LED FullHD', 129.99, 30);
+(3, 'Pantalla 24\"', 'Monitor LED FullHD', 129.99, 30);
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,7 @@ CREATE TABLE `cliente` (
 -- Volcado de datos para la tabla `cliente`
 --
 
-INSERT INTO cliente (ID, NOMBRE, EMAIL, TELEFONO, DIRECCION) VALUES
+INSERT INTO `cliente` (`ID`, `NOMBRE`, `EMAIL`, `TELEFONO`, `DIRECCION`) VALUES
 (1, 'Pedro Martín', 'pedro@gmail.com', 698765432, 'Calle Falsa 123'),
 (2, 'María Sánchez', 'maria@gmail.com', 687654321, 'Av. Siempre Viva 742'),
 (3, 'Luis Gómez', 'luis@gmail.com', 676543210, 'Paseo del Prado 1');
@@ -82,14 +82,33 @@ CREATE TABLE `linea_pedido` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `lineapedido`
+-- Volcado de datos para la tabla `linea_pedido`
 --
 
-INSERT INTO linea_pedido (ID, PEDIDO, ARTICULO, CANTIDAD, PRECIO) VALUES
+INSERT INTO `linea_pedido` (`ID`, `PEDIDO`, `ARTICULO`, `CANTIDAD`, `PRECIO`) VALUES
 (1, 1, 1, 2, 15.99),
 (2, 1, 2, 1, 49.99),
 (3, 2, 3, 1, 129.99),
 (4, 3, 1, 1, 15.99);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '2025_05_26_142543_create_sessions_table', 1);
 
 -- --------------------------------------------------------
 
@@ -110,10 +129,25 @@ CREATE TABLE `pedido` (
 -- Volcado de datos para la tabla `pedido`
 --
 
-INSERT INTO pedido (ID, CLIENTE, VENDEDOR, TOTAL, FECHA, ESTADO) VALUES
+INSERT INTO `pedido` (`ID`, `CLIENTE`, `VENDEDOR`, `TOTAL`, `FECHA`, `ESTADO`) VALUES
 (1, 1, 1, 65.98, '2025-05-20', 'enviado'),
 (2, 2, 2, 129.99, '2025-05-21', 'pendiente'),
 (3, 3, 3, 15.99, '2025-05-22', 'cancelado');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `id` varchar(255) NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `payload` longtext NOT NULL,
+  `last_activity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -130,7 +164,7 @@ CREATE TABLE `stock` (
 -- Volcado de datos para la tabla `stock`
 --
 
-INSERT INTO stock (articulo_id, cantidad) VALUES
+INSERT INTO `stock` (`articulo_id`, `cantidad`) VALUES
 (1, 80),
 (2, 2),
 (3, 15);
@@ -153,11 +187,10 @@ CREATE TABLE `vendedor` (
 -- Volcado de datos para la tabla `vendedor`
 --
 
-INSERT INTO vendedor (ID, NOMBRE, EMAIL, TELEFONO) VALUES
-(1, 'Ana López', 'ana@empresa.com', 612345678),
-(2, 'Carlos Ruiz', 'carlos@empresa.com', 623456789),
-(3, 'Lucía Torres', 'lucia@empresa.com', 634567890);
-
+INSERT INTO `vendedor` (`ID`, `nombre`, `email`, `TELEFONO`, `ADMIN`) VALUES
+(1, 'Ana López', 'ana@empresa.com', 612345678, 0),
+(2, 'Carlos Ruiz', 'carlos@empresa.com', 623456789, 0),
+(3, 'Lucía Torres', 'lucia@empresa.com', 634567890, 0);
 
 --
 -- Índices para tablas volcadas
@@ -184,12 +217,26 @@ ALTER TABLE `linea_pedido`
   ADD KEY `FK_ARTICULO` (`ARTICULO`);
 
 --
+-- Indices de la tabla `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `pedido`
 --
 ALTER TABLE `pedido`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `FKcliente` (`CLIENTE`) USING BTREE,
   ADD KEY `FKvendedor` (`VENDEDOR`) USING BTREE;
+
+--
+-- Indices de la tabla `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sessions_user_id_index` (`user_id`),
+  ADD KEY `sessions_last_activity_index` (`last_activity`);
 
 --
 -- Indices de la tabla `stock`
@@ -211,31 +258,37 @@ ALTER TABLE `vendedor`
 -- AUTO_INCREMENT de la tabla `articulo`
 --
 ALTER TABLE `articulo`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `linea_pedido`
 --
 ALTER TABLE `linea_pedido`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `vendedor`
 --
 ALTER TABLE `vendedor`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
