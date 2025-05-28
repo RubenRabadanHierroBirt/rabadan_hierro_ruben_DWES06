@@ -1,0 +1,24 @@
+package com.example.microserviciodummy.model;
+
+public class Stock {
+    private int articuloId;
+    private int cantidad;
+
+    public Stock() {
+    	
+    }
+    public Stock(int articuloId, int cantidad) {
+        this.articuloId = articuloId;
+        this.cantidad = cantidad;
+    }
+
+    public int getArticuloId() {
+        return articuloId;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    
+}	

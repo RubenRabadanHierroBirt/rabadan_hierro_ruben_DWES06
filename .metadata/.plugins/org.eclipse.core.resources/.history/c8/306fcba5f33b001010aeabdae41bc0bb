@@ -1,0 +1,19 @@
+package com.example.microserviciodummy.service;
+
+import com.example.microserviciodummy.model.Stock;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class StockService {
+
+    private final Map<Integer, Stock> stockData = new HashMap<>();
+
+    public Stock getStock(int articuloId) {
+        return stockData.getOrDefault(articuloId, new Stock(articuloId, 5));
+    }
+
+
+}
