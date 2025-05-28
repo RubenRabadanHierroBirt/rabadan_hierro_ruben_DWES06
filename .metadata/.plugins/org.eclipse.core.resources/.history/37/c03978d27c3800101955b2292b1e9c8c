@@ -1,0 +1,5 @@
+package com.example.microserviciodummy.model;
+
+public class Vendedor {
+
+}

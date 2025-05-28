@@ -1,0 +1,42 @@
+package com.example.microservicio.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "vendedor")
+public class Vendedor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private String nombre;
+    private String email;
+    private int telefono;
+    private boolean admin;
+
+    public Vendedor() {}
+
+    public Vendedor(String nombre, String email, int telefono, boolean admin) {
+        this.nombre = nombre;
+        this.email = email;
+        this.telefono = telefono;
+        this.admin = admin;
+    }
+
+    // Getters y setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public int getTelefono() { return telefono; }
+    public void setTelefono(int telefono) { this.telefono = telefono; }
+
+    public boolean isAdmin() { return admin; }
+    public void setAdmin(boolean admin) { this.admin = admin; }
+}

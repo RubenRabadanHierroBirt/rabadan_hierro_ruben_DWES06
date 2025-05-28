@@ -1,0 +1,38 @@
+package com.example.microserviciodummy.service;
+
+import com.example.microserviciodummy.model.Stock;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class StockService {
+
+    private final Map<Integer, Stock> stockData = new HashMap<>();
+
+    public StockService() {
+        stockData.put(1, new Stock(1, 10));
+        stockData.put(2, new Stock(2, 5));
+        stockData.put(3, new Stock(3, 0)); // Sin stock
+    }
+
+    public Stock getStock(int articuloId) {
+        return stockData.getOrDefault(articuloId, new Stock(articuloId, 0));
+    }
+
+    public Stock crearStock(Stock nuevo) {
+        stockData.put(nuevo.getArticuloId(), nuevo);
+        return nuevo;
+    }
+
+    public Stock actualizarStock(int articuloId, int nuevaCantidad) {
+        Stock stock = stockData.get(articuloId);
+        if (stock != null) {
+            stock.setCantidad(nuevaCantidad);
+        } else {
+            stock = new Stock(articuloId, nuevaCantidad);
+            stockData.put(articuloId, stock);
+        }
+        return stock;
+    }

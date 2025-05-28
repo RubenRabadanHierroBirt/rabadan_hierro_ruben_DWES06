@@ -1,0 +1,5 @@
+package com.example.microserviciodummy.controller;
+
+public class VendedorController {
+
+}

@@ -14,23 +14,39 @@ class LineaPedidoController extends Controller
 
     public function store(Request $request)
     {
-        return LineaPedidos::create($request->all());
-    }
+        $validated = $request->validate([
+            'pedido' => 'required|exists:pedidos,id',
+            'articulo' => 'required|exists:articulos,id',
+            'cantidad' => 'required|integer|min:1',
+            'precio' => 'required|numeric|min:0',
+        ]);
 
-    public function show($id)
-    {
-        return LineaPedidos::with(['pedidoRelacion', 'articuloRelacion'])->findOrFail($id);
+        $linea = LineaPedidos::create($validated);
+        return response()->json($linea, 201);
     }
 
     public function update(Request $request, $id)
     {
         $linea = LineaPedidos::findOrFail($id);
-        $linea->update($request->all());
-        return $linea;
+
+        $validated = $request->validate([
+            'cantidad' => 'sometimes|integer|min:1',
+            'precio' => 'sometimes|numeric|min:0',
+        ]);
+
+        $linea->update($validated);
+        return response()->json($linea);
     }
 
     public function destroy($id)
     {
-        return LineaPedidos::destroy($id);
+        $linea = LineaPedidos::find($id);
+
+        if (!$linea) {
+            return response()->json(['error' => 'Línea de pedido no encontrada'], 404);
+        }
+
+        $linea->delete();
+        return response()->json(['mensaje' => 'Línea de pedido eliminada correctamente']);
     }
 }

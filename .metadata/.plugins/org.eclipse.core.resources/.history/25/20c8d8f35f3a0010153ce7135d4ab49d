@@ -1,0 +1,23 @@
+package com.example.microserviciodummy.controller;
+
+import com.example.microserviciodummy.model.Stock;
+import com.example.microserviciodummy.service.StockService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/vendedor")
+public class StockController {
+
+    private final StockService vendedorService;
+
+    public StockController(StockService vendedorService) {
+        this.vendedorService = vendedorService;
+    }
+
+    @GetMapping
+    public List<Stock> getTodos() {
+        return vendedorService.getTodos();
+    }
+}

@@ -1,0 +1,48 @@
+package com.example.microservicio.service;
+
+import com.example.microservicio.model.Stock;
+import com.example.microservicio.repository.StockRepository;
+import org.springframework.stereotype.Service;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/stock")
+public class StockController {
+
+    private final StockService stockService;
+
+    public StockController(StockService stockService) {
+        this.stockService = stockService;
+    }
+
+    // ✅ GET /api/stock/{articuloId}
+    @GetMapping("/{articuloId}")
+    public ResponseEntity<?> getStock(@PathVariable("articuloId") int articuloId) {
+        return stockService.getStock(articuloId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // ✅ POST /api/stock
+    @PostMapping
+    public ResponseEntity<Stock> crearStock(@RequestBody Stock nuevoStock) {
+        Stock creado = stockService.crearStock(nuevoStock);
+        return ResponseEntity.ok(creado);
+    }
+
+    // ✅ PUT /api/stock/{articuloId}
+    @PutMapping("/{articuloId}")
+    public ResponseEntity<Stock> actualizarStock(@PathVariable("articuloId") int articuloId,
+                                                 @RequestBody Map<String, Integer> payload) {
+        if (!payload.containsKey("cantidad")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        int nuevaCantidad = payload.get("cantidad");
+        Stock actualizado = stockService.actualizarStock(articuloId, nuevaCantidad);
+        return ResponseEntity.ok(actualizado);
+    }
+}

@@ -1,0 +1,33 @@
+package com.example.microservicio.controller;
+
+import com.example.microservicio.model.Stock;
+import com.example.microservicio.service.VendedorService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/vendedores")
+public class VendedorController {
+
+    private final VendedorService service;
+
+    public VendedorController(VendedorService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<Stock> getAll() {
+        return service.getAll();
+    }
+
+    @PostMapping
+    public Stock save(@RequestBody Stock vendedor) {
+        return service.save(vendedor);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) {
+        service.delete(id);
+    }
+}

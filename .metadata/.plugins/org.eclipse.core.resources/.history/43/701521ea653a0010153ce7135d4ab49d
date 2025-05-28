@@ -1,0 +1,7 @@
+package com.example.microservicio.repository;
+
+import com.example.microservicio.model.Stock;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface VendedorRepository extends JpaRepository<Stock, Integer> {
+}

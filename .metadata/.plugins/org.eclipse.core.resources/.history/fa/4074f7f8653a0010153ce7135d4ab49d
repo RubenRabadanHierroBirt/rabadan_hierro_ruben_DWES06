@@ -1,0 +1,29 @@
+package com.example.microservicio.service;
+
+import com.example.microservicio.model.Stock;
+import com.example.microservicio.repository.StockRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class VendedorService {
+
+    private final StockRepository repository;
+
+    public VendedorService(StockRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<Stock> getAll() {
+        return repository.findAll();
+    }
+
+    public Stock save(Stock vendedor) {
+        return repository.save(vendedor);
+    }
+
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
+}

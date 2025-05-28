@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class LineaPedidos extends Model
 {
-    protected $table = 'linea_pedidos';
+
+    protected $table = 'linea_pedido';
 
     protected $fillable = ['pedido', 'articulo', 'cantidad', 'precio'];
 
