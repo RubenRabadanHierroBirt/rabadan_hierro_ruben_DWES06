@@ -10,7 +10,7 @@ class LineaPedidos extends Model
     protected $table = 'linea_pedido';
 
     protected $fillable = ['pedido', 'articulo', 'cantidad', 'precio'];
-
+    public $timestamps = false;
     public function pedidoRelacion()
     {
         return $this->belongsTo(Pedido::class, 'pedido');

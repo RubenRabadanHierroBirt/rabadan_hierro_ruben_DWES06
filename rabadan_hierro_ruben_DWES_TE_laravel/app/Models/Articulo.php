@@ -9,6 +9,7 @@ class Articulo extends Model
     protected $table = 'articulo';
 
     protected $fillable = ['nombre', 'descripcion', 'precio', 'stock'];
+    public $timestamps = false;
 
     public function lineasPedido()
     {

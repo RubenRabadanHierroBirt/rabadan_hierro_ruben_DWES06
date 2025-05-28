@@ -37,10 +37,21 @@ public function update(Request $request, Articulo $articulo)
     return response()->json($articulo);
 }
 
-public function destroy(Articulo $articulo)
+public function destroy($id)
 {
-    $articulo->delete();
-    return response()->json(null, 204);
+    $articulo = Articulo::find($id);
+
+    if (!$articulo) {
+        return response()->json(['error' => 'Artículo no encontrado'], 404);
+    }
+
+    $deleted = $articulo->delete();
+
+    if ($deleted) {
+        return response()->json(null, 204);
+    } else {
+        return response()->json(['error' => 'No se pudo borrar el artículo'], 500);
+    }
 }
 
 }
